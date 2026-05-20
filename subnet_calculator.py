@@ -1,9 +1,10 @@
-# Subnet Calculator v1.1
+# Subnet Calculator v2.0
 # Author: Jonathan Cardoso
 # Description: Takes an IP address and CIDR notation as input
 # and returns key subnet information including network address,
 # subnet mask, broadcast address, usable host range,
 # wildcard mask, IP class, and public/private detection..
+# v2.0 adds multiple subnet support and VLSM (Variable Length Subnet Masking)
 
 import ipaddress
 
@@ -41,22 +42,62 @@ def get_subnet_info(ip_cidr):
     print(f"IP Type:           {'Private' if is_private else 'Public'}")
     print("=====================================\n")
 
+def vlsm_calculator(network_ip, subnets):
+    network = ipaddress.IPv4Network(network_ip, strict=False)
+    subnets_sorted = sorted(subnets, reverse=True)
+    current_network = network
+
+    print(f"\n===== VLSM Results for {network_ip} =====")
+    for hosts_needed in subnets_sorted:
+        for prefix in range(32, 0, -1):
+            subnet_size = 2 ** (32 - prefix) - 2
+            if subnet_size >= hosts_needed:
+                subnet = list(current_network.subnets(new_prefix=prefix))[0]
+                print(f"\nSubnet for {hosts_needed} hosts:")
+                print(f"  Network:    {subnet.network_address}/{prefix}")
+                print(f"  Subnet Mask:{subnet.netmask}")
+                print(f"  Hosts:      {list(subnet.hosts())[0]} - {list(subnet.hosts())[-1]}")
+                print(f"  Usable:     {subnet.num_addresses - 2}")
+                current_network = list(current_network.subnets(new_prefix=prefix))[1]
+                break
+    print("\n=====================================\n")
 
 def main():
-    print("\n===== Welcome to Subnet Calculator v1.1 =====")
+    print("\n===== Welcome to Subnet Calculator v2.0 =====")
     print("Author: Jonathan Cardoso\n")
-    
+
     while True:
-        ip_cidr = input("Enter IP address with CIDR (e.g. 192.168.1.0/24) or 'quit' to exit: ")
-        
-        if ip_cidr.lower() == 'quit':
+        print("Options:")
+        print("  1 - Single Subnet Calculator")
+        print("  2 - VLSM Calculator")
+        print("  q - Quit")
+        choice = input("\nEnter your choice: ")
+
+        if choice.lower() == 'q':
             print("Goodbye!")
             break
-        
-        try:
-            get_subnet_info(ip_cidr)
-        except ValueError:
-            print("Invalid input. Please use format: 192.168.1.0/24\n")
+
+        elif choice == '1':
+            ip_cidr = input("Enter IP address with CIDR (e.g. 192.168.1.0/24): ")
+            try:
+                get_subnet_info(ip_cidr)
+            except ValueError:
+                print("Invalid input. Please use format: 192.168.1.0/24\n")
+
+        elif choice == '2':
+            network_ip = input("Enter network address with CIDR (e.g. 192.168.1.0/24): ")
+            num_subnets = int(input("How many subnets do you need? "))
+            subnets = []
+            for i in range(num_subnets):
+                hosts = int(input(f"How many hosts for subnet {i+1}? "))
+                subnets.append(hosts)
+            try:
+                vlsm_calculator(network_ip, subnets)
+            except Exception as e:
+                print(f"Error: {e}\n")
+
+        else:
+            print("Invalid choice. Please enter 1, 2, or q\n")
 
 if __name__ == "__main__":
-    main()   
+    main()
