@@ -1,12 +1,12 @@
-# Subnet Calculator v2.0
+# Subnet Calculator v3.0
 **Author:** Jonathan Cardoso  
-**Language:** Python 3  
+**Language:** Python 3 | Flask | HTML/CSS
 
 ## Description
-A command-line subnet calculator built in Python that takes an IP address 
-and CIDR notation as input and returns key subnet information instantly.
-Version 2.0 adds an interactive menu and VLSM (Variable Length Subnet Masking)
-support for dividing a network into multiple subnets of different sizes.
+A full-stack subnet calculator built in Python that started as a simple 
+command-line tool and evolved into a complete web application. Enter an 
+IP address with CIDR notation and instantly get detailed subnet information 
+displayed in a clean, modern web interface.
 
 ## Features
 - Network Address
@@ -17,50 +17,45 @@ support for dividing a network into multiple subnets of different sizes.
 - Wildcard Mask
 - IP Class Detection (A, B, C, D, E)
 - Public/Private IP Detection
-- VLSM Calculator *(new in v2.0)*
-- Interactive Menu System *(new in v2.0)*
+- VLSM Calculator (command-line)
+- Interactive Menu System (command-line)
+- ⭐ Web Interface with Flask *(new in v3.0)*
 
 ## How to Use
-1. Make sure Python 3 is installed on your system
+
+### Web App (v3.0)
+1. Make sure Python 3 and Flask are installed
 2. Clone or download this repository
 3. Open a terminal and navigate to the project folder
-4. Run the following command:
+4. Run:
+`python app.py`
+5. Open your browser and go to:
+`http://127.0.0.1:5000`
+6. Enter an IP address with CIDR and click Calculate
+
+### Command Line (v2.0)
+1. Run:
 `python subnet_calculator.py`
-5. Choose from the interactive menu:
+2. Choose from the menu:
    - Option 1: Single Subnet Calculator
    - Option 2: VLSM Calculator
    - q: Quit
 
-## Example Output — Single Subnet
-===== Subnet Calculator Results =====
-IP Address:        192.168.1.0
-CIDR Notation:     /24
-Subnet Mask:       255.255.255.0
-Wildcard Mask:     0.0.0.255
-Network Address:   192.168.1.0
-Broadcast Address: 192.168.1.255
-Usable Host Range: 192.168.1.1 - 192.168.1.254
-Total Usable Hosts: 254
-IP Class:          Class C
-IP Type:           Private
-## Example Output — VLSM
-===== VLSM Results for 192.168.1.0/24 =====
-Subnet for 50 hosts:
-Network:     192.168.1.0/26
-Subnet Mask: 255.255.255.192
-Hosts:       192.168.1.1 - 192.168.1.62
-Usable:      62
-Subnet for 25 hosts:
-Network:     192.168.1.64/27
-Subnet Mask: 255.255.255.224
-Hosts:       192.168.1.65 - 192.168.1.94
-Usable:      30
-Subnet for 10 hosts:
-Network:     192.168.1.96/28
-Subnet Mask: 255.255.255.240
-Hosts:       192.168.1.97 - 192.168.1.110
-Usable:      14
+## Project Structure
+Subnet Calculator/
+│
+├── app.py                 # Flask web application
+├── subnet_calculator.py   # Command-line version
+├── README.md
+└── templates/
+└── index.html         # Web interface
+
 ## Changelog
+### v3.0
+- Built Flask web application backend
+- Designed clean dark-themed HTML/CSS frontend
+- Added Private/Public IP badge display
+
 ### v2.0
 - Added VLSM Calculator
 - Added interactive menu system
@@ -75,8 +70,11 @@ Usable:      14
 - Basic subnet calculations
 
 ## Future Plans
-- v3.0 — Web interface with visual subnet map
+- Deploy to cloud (AWS/Heroku) for public access
+- Add VLSM support to web interface
+- Add subnet visualization map
 
 ## Author
 Jonathan Cardoso  
-[LinkedIn](https://www.linkedin.com/in/jonathan-costa-cardoso)
+[LinkedIn](https://www.linkedin.com/in/jonathan-costa-cardoso) | 
+[GitHub](https://github.com/Johsno1237)
